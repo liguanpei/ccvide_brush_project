@@ -1,0 +1,45 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BrushHandler	./brush_xml_parse.py	/^class BrushHandler( xml.sax.ContentHandler ):$/;"	c
+CCVideoBrushClass	./ccvideo_brush.py	/^class CCVideoBrushClass():$/;"	c
+DocumentHandler	./document_info_xml_parse.py	/^class DocumentHandler( xml.sax.ContentHandler ):$/;"	c
+GengeeBrushClass	./gengee_brush.py	/^class GengeeBrushClass():$/;"	c
+GengeeDocumentClass	./gengee_document.py	/^class GengeeDocumentClass():$/;"	c
+Handler	./brush_xml_parse.py	/^    Handler = BrushHandler()$/;"	v
+Handler	./document_info_xml_parse.py	/^    Handler = DocumentHandler()$/;"	v
+__init__	./brush_xml_parse.py	/^    def __init__(self):$/;"	m	class:BrushHandler
+__init__	./ccvideo_brush.py	/^    def __init__(self, output_filename):$/;"	m	class:CCVideoBrushClass
+__init__	./document_info_xml_parse.py	/^    def __init__(self):$/;"	m	class:DocumentHandler
+__init__	./gengee_brush.py	/^    def __init__(self, resource_path):$/;"	m	class:GengeeBrushClass
+__init__	./gengee_document.py	/^    def __init__(self, resource_path):$/;"	m	class:GengeeDocumentClass
+add_audio_in_ts_file	./pull_hls_stream.py	/^def add_audio_in_ts_file(dest_url, first_ts_url, dest_ts_filename, ts_content, output_file, output_dir):$/;"	f
+all_brush	./brush_xml_parse.py	/^    all_brush = Handler.get_parse_result()$/;"	v
+all_document	./document_info_xml_parse.py	/^    all_document = Handler.get_parse_result()$/;"	v
+argc	./pull_hls_stream.py	/^    argc = len(sys.argv)$/;"	v
+characters	./brush_xml_parse.py	/^    def characters(self, content):$/;"	m	class:BrushHandler
+check_ffmpeg_install	./pull_hls_stream.py	/^def check_ffmpeg_install():$/;"	f
+detect_ts_audio	./pull_hls_stream.py	/^def detect_ts_audio(dest_url):$/;"	f
+endElement	./brush_xml_parse.py	/^    def endElement(self, tag):$/;"	m	class:BrushHandler
+endElement	./document_info_xml_parse.py	/^    def endElement(self, tag):$/;"	m	class:DocumentHandler
+export_data	./ccvideo_brush.py	/^    def export_data(self, data):$/;"	m	class:CCVideoBrushClass
+generate_cc_json_data	./main.py	/^def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_document_dct):$/;"	f
+get_parse_result	./brush_xml_parse.py	/^    def get_parse_result(self):$/;"	m	class:BrushHandler
+get_parse_result	./document_info_xml_parse.py	/^    def get_parse_result(self):$/;"	m	class:DocumentHandler
+get_rgb_color	./main.py	/^def get_rgb_color(red, green, blue):$/;"	f
+handle_hls_stream_audio	./pull_hls_stream.py	/^def handle_hls_stream_audio(dest_url, output_file, output_dir):$/;"	f
+is_ffmpeg_install	./pull_hls_stream.py	/^    is_ffmpeg_install = check_ffmpeg_install()$/;"	v
+load_resource	./gengee_brush.py	/^    def load_resource(self):$/;"	m	class:GengeeBrushClass
+load_resource	./gengee_document.py	/^    def load_resource(self):$/;"	m	class:GengeeDocumentClass
+main	./main.py	/^def main():$/;"	f
+main	./pull_hls_stream.py	/^def main(dest_url, output_file):$/;"	f
+parser	./brush_xml_parse.py	/^    parser = xml.sax.make_parser()$/;"	v
+parser	./document_info_xml_parse.py	/^    parser = xml.sax.make_parser()$/;"	v
+pull_hls_stream_to_mp4	./pull_hls_stream.py	/^def pull_hls_stream_to_mp4(dest_url, output_file):$/;"	f
+repull_hls_stream	./pull_hls_stream.py	/^def repull_hls_stream(dest_ts_filename, output_file, output_dir):$/;"	f
+save_ts_to_file	./pull_hls_stream.py	/^def save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file, output_dir):$/;"	f
+startElement	./brush_xml_parse.py	/^    def startElement(self, tag, attributes):$/;"	m	class:BrushHandler
+startElement	./document_info_xml_parse.py	/^    def startElement(self, tag, attributes):$/;"	m	class:DocumentHandler

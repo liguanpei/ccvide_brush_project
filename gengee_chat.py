@@ -5,9 +5,9 @@ import os
 import sys
 import xml.sax
 
-from brush_xml_parse import BrushHandler
+from chat_xml_parse import ChatHandler
 
-class GengeeBrushClass():
+class GengeeChatClass():
     def __init__(self, resource_path):
         self.resource_path = resource_path 
         self.all_brush_info = {}
@@ -16,19 +16,11 @@ class GengeeBrushClass():
         parser = xml.sax.make_parser()
         parser.setFeature(xml.sax.handler.feature_namespaces, 0)
     
-        Handler = BrushHandler()
+        Handler = ChatHandler()
         parser.setContentHandler( Handler )
     
-        parser.parse(self.resource_path + "/anno.xml")
-        all_brush = Handler.get_parse_result()
-        #for i in all_brush:
-        #    print i
-        return all_brush
-
-if __name__ == '__main__':
-    g = GengeeBrushClass("./media")
-    r = g.load_resource()
+        parser.parse(self.resource_path + "/chat1.xml")
+        all_document = Handler.get_parse_result()
+        return all_document
             
-    for brush in r:
-        print brush
             

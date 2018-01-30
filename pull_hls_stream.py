@@ -41,7 +41,7 @@ def pull_hls_stream_to_mp4(dest_url, output_file):
     return True
 
 
-def save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file):
+def save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file, output_dir):
     m3u8_file_name = output_file[0: output_file.rfind(".")+1] + "m3u8"
 
     first = True
@@ -49,7 +49,7 @@ def save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file):
     for i in ts_content:
         if ".ts" in i:
             if first:
-                fd.write(dest_ts_filename + "\n") 
+                fd.write(output_dir + dest_ts_filename + "\n") 
                 first = False
             else: 
                 fd.write(dest_url[0: dest_url.rfind("/")+1] + i) 
@@ -58,28 +58,28 @@ def save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file):
     fd.close()
         
 
-def repull_hls_stream(dest_ts_filename, output_file):
+def repull_hls_stream(dest_ts_filename, output_file, output_dir):
     m3u8_file_name = output_file[0: output_file.rfind(".")+1] + "m3u8"
     cmd = "ffmpeg -i %s -c:a aac  -bsf:a aac_adtstoasc -strict -2 -y %s" % (m3u8_file_name, output_file) 
     ffmpeg_res = commands.getoutput(cmd)
-    os.remove(dest_ts_filename)
+    os.remove(output_dir + dest_ts_filename)
     os.remove(m3u8_file_name)
     print ffmpeg_res 
 
 
-def add_audio_in_ts_file(dest_url, first_ts_url, dest_ts_filename, ts_content, output_file):
+def add_audio_in_ts_file(dest_url, first_ts_url, dest_ts_filename, ts_content, output_file, output_dir):
     try:
-        cmd = "ffmpeg -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -i %s -shortest -c:v copy -c:a aac -strict -2 -y %s" % (first_ts_url, dest_ts_filename)
+        cmd = "ffmpeg -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -i %s -shortest -c:v copy -c:a aac -strict -2 -y %s" % (first_ts_url, output_dir + dest_ts_filename)
     
         ffmpeg_res = commands.getoutput(cmd)
         print ffmpeg_res
-        save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file)
-        repull_hls_stream(dest_ts_filename, output_file)
+        save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file, output_dir)
+        repull_hls_stream(dest_ts_filename, output_file, output_dir)
     except Exception, e:
         print str(e)
 
         
-def handle_hls_stream_audio(dest_url, output_file):
+def handle_hls_stream_audio(dest_url, output_file, output_dir):
     try:
         request = urllib.urlopen(dest_url)
         ts_content = request.readlines()
@@ -91,8 +91,8 @@ def handle_hls_stream_audio(dest_url, output_file):
                 if "http" not in dest_ts_filename:
                     first_ts_url = dest_url[0: dest_url.rfind("/")+1] + dest_ts_filename
                     first_ts_url = first_ts_url.replace("\n", "")
-                    print 'first_rs_url = ' + first_ts_url
-                    add_audio_in_ts_file(dest_url, first_ts_url, dest_ts_filename, ts_content, output_file)
+                    print 'first_ts_url = ' + first_ts_url
+                    add_audio_in_ts_file(dest_url, first_ts_url, dest_ts_filename, ts_content, output_file, output_dir)
                     
     except Exception, e:
         print str(e)
@@ -101,10 +101,13 @@ def handle_hls_stream_audio(dest_url, output_file):
 def main(dest_url, output_file):
     has_audio = detect_ts_audio(dest_url)
     print 'has_auido = ' + str(has_audio)
+    output_dir = output_file[0: output_file.rfind("/")+1]
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir) 
     if has_audio:
         pull_hls_stream_to_mp4(dest_url, output_file)
     else:
-        handle_hls_stream_audio(dest_url, output_file)
+        handle_hls_stream_audio(dest_url, output_file, output_dir)
 
 
 if __name__ == "__main__":
