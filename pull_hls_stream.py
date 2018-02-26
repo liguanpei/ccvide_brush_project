@@ -60,7 +60,7 @@ def save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file, output_
 
 def repull_hls_stream(dest_ts_filename, output_file, output_dir):
     m3u8_file_name = output_file[0: output_file.rfind(".")+1] + "m3u8"
-    cmd = "ffmpeg -i %s -c:a aac  -bsf:a aac_adtstoasc -strict -2 -y %s" % (m3u8_file_name, output_file) 
+    cmd = "ffmpeg -protocol_whitelist file,tcp,http -i %s -c:a aac  -bsf:a aac_adtstoasc -strict -2 -y %s" % (m3u8_file_name, output_file) 
     ffmpeg_res = commands.getoutput(cmd)
     os.remove(output_dir + dest_ts_filename)
     os.remove(m3u8_file_name)

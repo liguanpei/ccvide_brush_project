@@ -71,7 +71,7 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             data["thickness"] = brush["linesize"]
             data["type"] = int(mtype)
             
-            drawl = []
+            draw0 = []
             x_y = {}
             width = int(data["width"])
             height = int(data["height"])
@@ -79,10 +79,10 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
                 x, y = area.split(",")
                 x_y["x"] = round(float(x) / width, 4)
                 x_y["y"] = round(float(y) / height, 4)
-                drawl.append(x_y)
+                draw0.append(x_y)
                 x_y = {}
 
-            data["draw"] = drawl
+            data["draw"] = draw0
             tmp_brush["data"] = data
 
         elif mtype == "6": # 展视矩形 --> CC矩形 type:3
@@ -113,7 +113,7 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             draw1["width"] = round(float(w) / width, 4)
             draw1["height"] = round(float(h) / height, 4)
 
-            data["draw"] = drawl
+            data["draw"] = draw1
             tmp_brush["data"] = data
 
         elif mtype == "5": # 展视圆或椭圆 --> CC圆 type:4
@@ -132,19 +132,19 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             data["thickness"] = brush["linesize"]
             data["type"] = 4
             
-            draw1 = {}
+            draw2 = {}
             width = int(data["width"])
             height = int(data["height"])
             xy_str = brush["brush_area_list"][0]
             wh_str = brush["brush_area_list"][1]
             x, y = xy_str.split(",")
             w, h = wh_str.split(",")
-            draw1["x"] = round(float(x) / width, 4)
-            draw1["y"] = round(float(y) / height, 4)
-            draw1["widthRadius"] = round(float(w) / width, 4)
-            draw1["heightRadius"] = round(float(h) / height, 4)
+            draw2["x"] = round(float(x) / width, 4)
+            draw2["y"] = round(float(y) / height, 4)
+            draw2["widthRadius"] = round(float(w) / width, 4)
+            draw2["heightRadius"] = round(float(h) / height, 4)
 
-            data["draw"] = drawl
+            data["draw"] = draw2
             tmp_brush["data"] = data
 
         elif mtype == "8": # 展视直线 --> CC直线 type:2
@@ -163,7 +163,7 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             data["thickness"] = brush["linesize"]
             data["type"] = 2
             
-            drawl = []
+            draw3 = []
             x_y = {}
             width = int(data["width"])
             height = int(data["height"])
@@ -174,12 +174,12 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             x_y["x"] = round(float(x) / width, 4)
             x_y["y"] = round(float(y) / height, 4)
             x_y = {}
-            drawl.append(x_y)
+            draw3.append(x_y)
             x_y["x"] = round(float(end_x) / width, 4)
             x_y["y"] = round(float(end_y) / height, 4)
-            drawl.append(x_y)
+            draw3.append(x_y)
 
-            data["draw"] = drawl
+            data["draw"] = draw3
             tmp_brush["data"] = data
 
 
@@ -199,7 +199,7 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             data["thickness"] = 2
             data["type"] = 5
             
-            draw1 = {}
+            draw4 = {}
             width = int(data["width"])
             height = int(data["height"])
             xy_str = brush["brush_area_list"][0]
@@ -207,13 +207,13 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             label_str = brush["brush_area_list"][2]
             x, y = xy_str.split(",")
             end_x, end_y = wh_str.split(",")
-            draw1["x"] = round(float(x) / width, 4)
-            draw1["y"] = round(float(y) / height, 4)
-            draw1["width"] = round((float(end_x) - float(x)) / width, 4)
-            draw1["height"] = round((float(end_y) - float(x)) / height, 4)
-            draw1["label"] = label_str
+            draw4["x"] = round(float(x) / width, 4)
+            draw4["y"] = round(float(y) / height, 4)
+            draw4["width"] = round((float(end_x) - float(x)) / width, 4)
+            draw4["height"] = round((float(end_y) - float(x)) / height, 4)
+            draw4["label"] = label_str
 
-            data["draw"] = draw1
+            data["draw"] = draw4
             tmp_brush["data"] = data
 
 
