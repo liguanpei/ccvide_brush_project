@@ -109,8 +109,10 @@ def detect_mp4_video(output_file):
 
 
 def add_video_to_output(output_file):
-    cmd = "ffmpeg -i %s -i %s -c copy -y %s" % (output_file, "black.mp4", output_file+".mp4")
+    cmd = "ffmpeg -i %s -i %s -c copy -y %s" % (output_file, os.path.dirname(os.path.realpath(__file__)) + "/black.mp4", output_file+".mp4")
     result = commands.getoutput(cmd)
+    print cmd
+    print result
     cmd = "mv %s.mp4 %s" % (output_file, output_file)
     result = commands.getoutput(cmd)
     print cmd
