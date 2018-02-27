@@ -32,7 +32,7 @@ def detect_ts_audio(dest_url):
     
 
 def pull_hls_stream_to_mp4(dest_url, output_file):
-    cmd = "ffmpeg -i %s -bsf:a aac_adtstoasc -c copy %s" % (dest_url, output_file)
+    cmd = "ffmpeg -i %s -bsf:a aac_adtstoasc -c copy -y %s" % (dest_url, output_file)
     pull_result = commands.getoutput(cmd)
 
     if "Not Found" in pull_result:
@@ -98,6 +98,24 @@ def handle_hls_stream_audio(dest_url, output_file, output_dir):
         print str(e)
 
 
+def detect_mp4_video(output_file):
+    detect_cmd = "ffmpeg -i %s" % output_file
+    detect_result = commands.getoutput(detect_cmd)
+    print detect_result
+    if "fps" not in detect_result and "tbr" not in detect_result:
+        return False
+    else:
+        return True
+
+
+def add_video_to_output(output_file):
+    cmd = "ffmpeg -i %s -i %s -c copy -y %s" % (output_file, "black.mp4", output_file+".mp4")
+    result = commands.getoutput(cmd)
+    cmd = "mv %s.mp4 %s" % (output_file, output_file)
+    result = commands.getoutput(cmd)
+    print cmd
+    
+
 def main(dest_url, output_file):
     has_audio = detect_ts_audio(dest_url)
     print 'has_auido = ' + str(has_audio)
@@ -108,6 +126,11 @@ def main(dest_url, output_file):
         pull_hls_stream_to_mp4(dest_url, output_file)
     else:
         handle_hls_stream_audio(dest_url, output_file, output_dir)
+
+    has_video = detect_mp4_video(dest_url)
+    print 'has_video = ' + str(has_video)
+    if not has_video:
+        add_video_to_output(output_file)
 
 
 if __name__ == "__main__":
