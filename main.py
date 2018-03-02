@@ -85,7 +85,7 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             data["draw"] = draw0
             tmp_brush["data"] = data
 
-        elif mtype == "6": # 展视矩形 --> CC矩形 type:3
+        elif mtype == "6" or mtype == "5": # 展视矩形 --> CC矩形 type:3
             tmp_brush["time"] = int(round(ast.literal_eval(brush["timestamp"])))
             tmp_brush["docName"] = all_gengee_document_dct[brush["documentid"]]["name"]
             tmp_brush["pageNum"] = brush["pageid"]
@@ -110,42 +110,42 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             w, h = wh_str.split(",")
             draw1["x"] = round(float(x) / width, 4)
             draw1["y"] = round(float(y) / height, 4)
-            draw1["width"] = round(float(w) / width, 4)
-            draw1["height"] = round(float(h) / height, 4)
+            draw1["width"] = round((float(w)-float(x)) / width, 4)
+            draw1["height"] = round((float(h)-float(y)) / height, 4)
 
             data["draw"] = draw1
             tmp_brush["data"] = data
 
-        elif mtype == "5": # 展视圆或椭圆 --> CC圆 type:4
-            tmp_brush["time"] = int(round(ast.literal_eval(brush["timestamp"])))
-            tmp_brush["docName"] = all_gengee_document_dct[brush["documentid"]]["name"]
-            tmp_brush["pageNum"] = brush["pageid"]
-            data["alpha"] = 1
-            tmp_color = brush["color"][1:7]
-            tmp_color_re = re.findall(r'(.{2})', tmp_color)
-            data["color"] = get_rgb_color(int(tmp_color_re[0], 16), int(tmp_color_re[1], 16), int(tmp_color_re[2], 16))
-            data["docid"] = brush["documentid"]
-            data["drawid"] = "2018-01-30" # TODU
-            data["width"] = all_gengee_document_dct[brush["documentid"]]["width"]
-            data["height"] = all_gengee_document_dct[brush["documentid"]]["height"]
-            data["page"] = brush["pageid"]
-            data["thickness"] = brush["linesize"]
-            data["type"] = 4
-            
-            draw2 = {}
-            width = int(data["width"])
-            height = int(data["height"])
-            xy_str = brush["brush_area_list"][0]
-            wh_str = brush["brush_area_list"][1]
-            x, y = xy_str.split(",")
-            w, h = wh_str.split(",")
-            draw2["x"] = round(float(x) / width, 4)
-            draw2["y"] = round(float(y) / height, 4)
-            draw2["widthRadius"] = round(float(w) / width, 4)
-            draw2["heightRadius"] = round(float(h) / height, 4)
+        #elif mtype == "5": # 展视圆或椭圆 --> CC圆 type:4
+        #    tmp_brush["time"] = int(round(ast.literal_eval(brush["timestamp"])))
+        #    tmp_brush["docName"] = all_gengee_document_dct[brush["documentid"]]["name"]
+        #    tmp_brush["pageNum"] = brush["pageid"]
+        #    data["alpha"] = 1
+        #    tmp_color = brush["color"][1:7]
+        #    tmp_color_re = re.findall(r'(.{2})', tmp_color)
+        #    data["color"] = get_rgb_color(int(tmp_color_re[0], 16), int(tmp_color_re[1], 16), int(tmp_color_re[2], 16))
+        #    data["docid"] = brush["documentid"]
+        #    data["drawid"] = "2018-01-30" # TODU
+        #    data["width"] = all_gengee_document_dct[brush["documentid"]]["width"]
+        #    data["height"] = all_gengee_document_dct[brush["documentid"]]["height"]
+        #    data["page"] = brush["pageid"]
+        #    data["thickness"] = brush["linesize"]
+        #    data["type"] = 4
+        #    
+        #    draw2 = {}
+        #    width = int(data["width"])
+        #    height = int(data["height"])
+        #    xy_str = brush["brush_area_list"][0]
+        #    wh_str = brush["brush_area_list"][1]
+        #    x, y = xy_str.split(",")
+        #    w, h = wh_str.split(",")
+        #    draw2["x"] = round(float(x) / width, 4)
+        #    draw2["y"] = round(float(y) / height, 4)
+        #    draw2["widthRadius"] = round(float(w) / width, 4)
+        #    draw2["heightRadius"] = round(float(h) / height, 4)
 
-            data["draw"] = draw2
-            tmp_brush["data"] = data
+        #    data["draw"] = draw2
+        #    tmp_brush["data"] = data
 
         elif mtype == "8": # 展视直线 --> CC直线 type:2
             tmp_brush["time"] = int(round(ast.literal_eval(brush["timestamp"])))
@@ -209,9 +209,12 @@ def generate_cc_json_data(first_docid, all_gengee_brush_list, all_gengee_documen
             end_x, end_y = wh_str.split(",")
             draw4["x"] = round(float(x) / width, 4)
             draw4["y"] = round(float(y) / height, 4)
-            draw4["width"] = round((float(end_x) - float(x)) / width, 4)
-            draw4["height"] = round((float(end_y) - float(x)) / height, 4)
+            #draw4["width"] = round((float(end_x) - float(x)) / width, 4)
+            #draw4["height"] = round((float(end_y) - float(x)) / height, 4)
+            draw4["width"] = round((float(end_x) - float(x)), 4)
+            draw4["height"] = round((float(end_y) - float(x)), 4)
             draw4["label"] = label_str
+            draw4["size"] = int(brush["fontsize"])
 
             data["draw"] = draw4
             tmp_brush["data"] = data

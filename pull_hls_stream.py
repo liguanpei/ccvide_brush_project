@@ -58,6 +58,15 @@ def save_ts_to_file(dest_url, dest_ts_filename, ts_content, output_file, output_
         else:
             fd.write(i)
     fd.close()
+
+
+def save_ts_to_txtfile(dest_url, dest_ts_filename, ts_content, output_file, output_dir):
+    txt_file_name = output_file[0: output_file.rfind(".")+1] + "txt"
+    fd = open(txt_file_name, "w")
+    for i in ts_content:
+        if ".ts" in i:
+            fd.write("file '%s'" % i.replace("\n", "") + "\n")
+    fd.close()
         
 
 def repull_hls_stream(dest_ts_filename, output_file, output_dir, videoflag=True):
@@ -65,7 +74,7 @@ def repull_hls_stream(dest_ts_filename, output_file, output_dir, videoflag=True)
     if videoflag:
         cmd = "ffmpeg -protocol_whitelist file,tcp,http -i %s -c:a aac  -bsf:a aac_adtstoasc -strict -2 -y %s" % (m3u8_file_name, output_file) 
     else:
-        cmd = "ffmpeg -protocol_whitelist file,tcp,http -i %s -c copy -y %s" % (m3u8_file_name, output_file) 
+        cmd = "ffmpeg -protocol_whitelist file,tcp,http -i %s -c copy -bsf:a aac_adtstoasc -y %s" % (m3u8_file_name, output_file) 
 
     ffmpeg_res = commands.getoutput(cmd)
     os.remove(output_dir + dest_ts_filename)
@@ -146,9 +155,6 @@ def detect_mp4_video(output_file):
 
 
 def detect_video_codec(output_file):
-    has_video = detect_mp4_video(output_file)
-    if not has_video:
-        return has_video
     detect_cmd = "ffmpeg -i %s" % output_file
     detect_result = commands.getoutput(detect_cmd)
     print detect_result
@@ -158,14 +164,33 @@ def detect_video_codec(output_file):
         return True
 
 
-def add_video_to_output(output_file):
-    cmd = "ffmpeg -i %s -i %s -c copy -y %s" % (output_file, black_mp4_file, output_file+".mp4")
-    result = commands.getoutput(cmd)
-    print cmd
-    print result
-    cmd = "mv %s.mp4 %s" % (output_file, output_file)
-    result = commands.getoutput(cmd)
-    print cmd
+def add_video_to_output(dest_url, output_file, output_dir):
+    try:
+        request = urllib.urlopen(dest_url)
+        ts_content = request.readlines()
+        if ts_content:
+            ts_list = [i for i in ts_content if ".ts" in i]
+            if ts_list:
+                for dest_ts_filename in ts_list:
+                    dest_ts_filename = dest_ts_filename.replace("\n", "")
+                    #print dest_ts_filename
+                    if "http" not in dest_ts_filename:
+                        ts_url = dest_url[0: dest_url.rfind("/")+1] + dest_ts_filename
+                        ts_url = ts_url.replace("\n", "")
+                        #print 'ts_url = ' + ts_url
+                        cmd = "ffmpeg -i %s -i %s -c copy -shortest -y %s" % (ts_url, black_mp4_file, output_dir + dest_ts_filename)
+                        result = commands.getoutput(cmd)
+                
+            save_ts_to_txtfile(dest_url, dest_ts_filename, ts_content, output_file, output_dir)
+            cmd = "ffmpeg -f concat -i %s -c copy -y %s" % (output_file[0: output_file.rfind(".")+1] + "txt", output_file)
+            result = commands.getoutput(cmd)
+            for i in ts_content:
+                if ".ts" in i:
+                    os.remove(output_dir + i.replace("\n", ""))
+            os.remove(output_file[0: output_file.rfind(".")+1] + "txt")
+                    
+    except Exception, e:
+        print str(e)
     
 
 def main(dest_url, output_file):
@@ -185,10 +210,10 @@ def main(dest_url, output_file):
     else:
         handle_hls_stream_audio(dest_url, output_file, output_dir)
 
-    #has_video = detect_mp4_video(output_file)
-    #print 'has_video = ' + str(has_video)
-    #if not has_video:
-    #    add_video_to_output(output_file)
+    has_video = detect_mp4_video(output_file)
+    print 'has_video = ' + str(has_video)
+    if not has_video:
+        add_video_to_output(dest_url, output_file, output_dir)
 
 
 if __name__ == "__main__":
